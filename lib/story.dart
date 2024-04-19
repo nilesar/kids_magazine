@@ -241,10 +241,17 @@ class _StoryState extends State<Story> {
                                                 break;
                                             }
 
-
+                                            if( t_text != tt_text ) {
+                                              updateTransliteratedText(
+                                                  widget._storyID, tt_text);
                                             }
 
-                                          updateTransliteratedText(widget._storyID, tt_text);
+
+                                          }
+
+
+
+
                                            // Call your transliterateTelugu function here
                                           // Update Firestore document
 
