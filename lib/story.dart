@@ -1,9 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:kids_magazine/custom_transliterate.dart';
 import 'package:kids_magazine/highlighting.dart';
+import 'package:kids_magazine/select.dart';
 import 'package:kids_magazine/transliterate.dart';
+import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 
 bool isSwitched1 = false;
@@ -20,6 +24,15 @@ class Story extends StatefulWidget {
 }
 
 class _StoryState extends State<Story> {
+
+  TutorialCoachMark? tutorialCoachMark;
+  List<TargetFocus> targets = [];
+
+  GlobalKey transliterateKey = GlobalKey();
+  GlobalKey audioKey = GlobalKey();
+  bool isLoggedIn = false;
+  bool isTutorialShown = false;
+
   CollectionReference stry = FirebaseFirestore.instance.collection('stories');
   FlutterTts flutterTts = FlutterTts();
 
@@ -28,7 +41,77 @@ class _StoryState extends State<Story> {
     flutterTts.stop();
     super.dispose();
   }
+  @override
+  void initState() {
+    isLoggedIn = FirebaseAuth.instance.currentUser != null;
 
+    if (!isLoggedIn && !isTutorialShown) { // Check if tutorial is not shown
+      Future.delayed(const Duration(seconds: 1), () {
+        _showTutorialCoachmark();
+      });
+    }
+    super.initState();
+  }
+
+  void _showTutorialCoachmark() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool tutorialShown = prefs.getBool('tutorialShown2') ?? false;
+
+    if (!tutorialShown) {
+      _initTarget();
+      tutorialCoachMark = TutorialCoachMark(targets: targets);
+      tutorialCoachMark!.show(context: context);
+
+      // Save in SharedPreferences that tutorial has been shown
+      prefs.setBool('tutorialShown2', true);
+    }
+  }
+
+
+  void _initTarget(){
+    targets=[
+      TargetFocus(
+          identify: "transliterate",
+          keyTarget: transliterateKey,
+          contents: [
+            TargetContent(
+                align: ContentAlign.bottom,
+                builder: (context, controller){
+                  return CoachmarkDesc(
+                    text: "Click this to see transliterated text.",
+                    onNext: (){
+                      controller.next();
+                    },
+                    onSkip: (){
+                      controller.skip();
+                    },
+                  );
+                }
+            )
+          ]
+      ),
+      TargetFocus(
+          identify: "audio",
+          keyTarget: audioKey,
+          contents: [
+            TargetContent(
+                align: ContentAlign.bottom,
+                builder: (context, controller){
+                  return CoachmarkDesc(
+                    text: "Click here for audio options",
+                    onNext: (){
+                      controller.next();
+                    },
+                    onSkip: (){
+                      controller.skip();
+                    },
+                  );
+                }
+            )
+          ]
+      ),
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -100,6 +183,7 @@ class _StoryState extends State<Story> {
                                 children: [
                                   SizedBox(width: MediaQuery.of(context).size.width*0.02,),
                                   FittedBox(
+                                    key: audioKey,
                                     fit: BoxFit.fitWidth,
                                     child: Text(
                                       "Audio",
@@ -198,6 +282,7 @@ class _StoryState extends State<Story> {
                               Column(
                                 children: [
                                   FittedBox(
+                                    key: transliterateKey,
                                     fit: BoxFit.fitWidth,
                                     child: Text(
                                       "Transliteration",
@@ -215,45 +300,45 @@ class _StoryState extends State<Story> {
                                         isSwitched2 = value;
 
                                         if (isSwitched2) {
-                                            // Declare the variable outside the try block
+                                          // Declare the variable outside the try block
                                           //
                                           //
                                           // // Determine the default script based on the selected language
                                           // // print(selectedLanguage);
 
                                           // print(o_text);
-                                            switch (selectedLanguage) {
-                                              case 'Telugu':
-                                                tt_text =
-                                                    transliterateTelugu(o_text);
-                                                break;
-                                              case 'Bengali':
-                                                tt_text = transliterateBengali(
-                                                    o_text);
-                                                break;
-                                              case 'Gujarati':
-                                                tt_text = transliterateGujarati(
-                                                    o_text);
-                                                break;
-                                              case 'Marathi':
-                                                tt_text = transliterateMarathi(
-                                                    o_text);
-                                                break;
-                                            }
+                                          switch (selectedLanguage) {
+                                            case 'Telugu':
+                                              tt_text =
+                                                  transliterateTelugu(o_text);
+                                              break;
+                                            case 'Bengali':
+                                              tt_text = transliterateBengali(
+                                                  o_text);
+                                              break;
+                                            case 'Gujarati':
+                                              tt_text = transliterateGujarati(
+                                                  o_text);
+                                              break;
+                                            case 'Marathi':
+                                              tt_text = transliterateMarathi(
+                                                  o_text);
+                                              break;
+                                          }
 
-                                            if( t_text != tt_text ) {
-                                              updateTransliteratedText(
-                                                  widget._storyID, tt_text);
-                                            }
-
-
+                                          if( t_text != tt_text ) {
+                                            updateTransliteratedText(
+                                                widget._storyID, tt_text);
                                           }
 
 
+                                        }
 
 
-                                           // Call your transliterateTelugu function here
-                                          // Update Firestore document
+
+
+                                        // Call your transliterateTelugu function here
+                                        // Update Firestore document
 
                                       });
                                     },

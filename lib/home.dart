@@ -7,8 +7,11 @@ import 'package:kids_magazine/register.dart';
 import 'package:kids_magazine/select.dart';
 import 'package:kids_magazine/story.dart';
 import 'package:kids_magazine/uploadStory.dart';
+import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 import 'admin.dart';
 import 'my_uploads.dart';
+import 'package:shared_preferences/shared_preferences.dart'; // Add this import
+
 
 class HomePage extends StatefulWidget {
   final String _SelectedLanguage;
@@ -23,15 +26,77 @@ class _HomePageState extends State<HomePage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
   CollectionReference img = FirebaseFirestore.instance.collection('stories');
 
+  TutorialCoachMark? tutorialCoachMark;
+  List<TargetFocus> targets = [];
+
+  GlobalKey navKey = GlobalKey();
+  bool isLoggedIn = false;
+
+  @override
+  void initState() {
+    isLoggedIn = FirebaseAuth.instance.currentUser != null;
+
+    if (!isLoggedIn) {
+      Future.delayed(const Duration(seconds: 1), () {
+        _showTutorialCoachmark();
+      });
+    }
+
+    super.initState();
+  }
+
+  void _showTutorialCoachmark() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool tutorialShown = prefs.getBool('tutorialShown3') ?? false;
+
+    if (!tutorialShown) {
+      _initTarget();
+      tutorialCoachMark = TutorialCoachMark(targets: targets);
+      tutorialCoachMark!.show(context: context);
+
+      // Save in SharedPreferences that tutorial has been shown
+      prefs.setBool('tutorialShown3', true);
+    }
+  }
+
+  void _initTarget(){
+    targets = [
+      TargetFocus(
+          identify: "login",
+          keyTarget: navKey,
+          contents: [
+            TargetContent(
+                align: ContentAlign.bottom,
+                builder: (context, controller){
+                  return CoachmarkDesc(
+                    text: "click here to acsess navigation bar",
+                    onNext: (){
+                      controller.next();
+                    },
+                    onSkip: (){
+                      controller.skip();
+                    },
+                  );
+                }
+            )
+          ]
+      ),
+
+
+    ];
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
       drawer: NavDrawer(widget._SelectedLanguage),
       appBar: AppBar(
+
         backgroundColor: Color(0xFF00073e),
         leading: IconButton(
           icon: Icon(
+            key: navKey,
             Icons.menu,
             color: Color(0xFFFFC857),
             size: 30.0,
@@ -87,6 +152,7 @@ class _HomePageState extends State<HomePage> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
+
                                       builder: (context) => Story(document.id)),
                                 );
                               },
@@ -240,6 +306,130 @@ class NavDrawer extends StatefulWidget {
 }
 
 class _NavDrawerState extends State<NavDrawer> {
+
+  TutorialCoachMark? tutorialCoachMark;
+  List<TargetFocus> targets = [];
+
+  GlobalKey loginKey = GlobalKey();
+  GlobalKey registerKey = GlobalKey();
+  GlobalKey uploadkey = GlobalKey();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    if(user == null) {
+      Future.delayed(const Duration(seconds: 1), () {
+        _showTutorialCoachmark();
+      });
+    }
+    else if(user != null){
+      Future.delayed(const Duration(seconds: 1), () {
+        _showuploadTutorial();
+      });
+    }
+    super.initState();
+  }
+
+  void _showTutorialCoachmark() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool tutorialShown = prefs.getBool('tutorialShownsidebar') ?? false;
+
+    if (!tutorialShown) {
+      _initTarget();
+      tutorialCoachMark = TutorialCoachMark(targets: targets);
+      tutorialCoachMark!.show(context: context);
+
+      // Save in SharedPreferences that tutorial has been shown
+      prefs.setBool('tutorialShownsidebar', true);
+    }
+  }
+  void _showuploadTutorial() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool tutorialShown = prefs.getBool('tutorialShownupload') ?? false;
+
+    if (!tutorialShown) {
+      _initLoggedInTargets();
+      tutorialCoachMark = TutorialCoachMark(targets: targets);
+      tutorialCoachMark!.show(context: context);
+
+      // Save in SharedPreferences that tutorial has been shown
+      prefs.setBool('tutorialShownupload', true);
+    }
+  }
+
+
+  void _initTarget(){
+    targets=[
+      TargetFocus(
+          identify: "register",
+          keyTarget: registerKey,
+          contents: [
+            TargetContent(
+                align: ContentAlign.bottom,
+                builder: (context, controller){
+                  return CoachmarkDesc(
+                    text: "click here to register. \nOnce you login you can Upload stories of your own!",
+                    onNext: (){
+                      controller.next();
+                    },
+                    onSkip: (){
+                      controller.skip();
+                    },
+                  );
+                }
+            )
+          ]
+      ),
+      TargetFocus(
+          identify: "login",
+          keyTarget: loginKey,
+          contents: [
+            TargetContent(
+                align: ContentAlign.bottom,
+                builder: (context, controller){
+                  return CoachmarkDesc(
+                    text: "click here to login. \nOnce you login you can Upload stories of your own!",
+                    onNext: (){
+                      controller.next();
+                    },
+                    onSkip: (){
+                      controller.skip();
+                    },
+                  );
+                }
+            )
+          ]
+      ),
+
+    ];
+  }
+  void _initLoggedInTargets() {
+    // Define targets for logged-in users
+    targets = [
+      TargetFocus(
+        identify: "upload",
+        keyTarget: uploadkey,
+        contents: [
+          TargetContent(
+            align: ContentAlign.bottom,
+            builder: (context, controller) {
+              return CoachmarkDesc(
+                text: "Upload stories from here",
+                onNext: () {
+                  controller.next();
+                },
+                onSkip: () {
+                  controller.skip();
+                },
+              );
+            },
+          )
+        ],
+      ),
+      // Define other targets for logged-in users
+    ];
+  }
+
   User? user = FirebaseAuth.instance.currentUser;
 
   Future<void> signInWithGoogle() async {
@@ -272,8 +462,7 @@ class _NavDrawerState extends State<NavDrawer> {
     } else {
       // The user is already there, so redirect to feed
 
-      if (_currentUser.user!.email == 'irlabiit0@gmail.com' ||
-          _currentUser.user!.email == 'pkenny.mukeshbhai.cse19@itbhu.ac.in') {
+      if (_currentUser.user!.email == 'irlabiit0@gmail.com') {
         //take to the admin side
         Navigator.pop(context);
         Navigator.push(
@@ -319,14 +508,19 @@ class _NavDrawerState extends State<NavDrawer> {
             Container(
               color: Color(0xFFFFC857),
               child: Column(
+
                 children: [
+
                   if (user == null)
                     ListTile(
+
                       leading: Icon(
+                        key:loginKey,
                         Icons.login,
                         color: Color(0xFF181621),
                       ),
                       title: Text(
+
                         'Login',
                         style: TextStyle(
                           fontSize: 18.0,
@@ -340,6 +534,7 @@ class _NavDrawerState extends State<NavDrawer> {
                   if (user == null)
                     ListTile(
                       leading: Icon(
+                        key:registerKey,
                         Icons.login_sharp,
                         color: Color(0xFF181621),
                       ),
@@ -379,6 +574,7 @@ class _NavDrawerState extends State<NavDrawer> {
                   if (user != null)
                     ListTile(
                       leading: Icon(
+                        key:uploadkey,
                         Icons.upload_rounded,
                         color: Color(0xFF181621),
                       ),
@@ -473,7 +669,7 @@ class _NavDrawerState extends State<NavDrawer> {
 
 Your app data will also be deleted, and you won't be able to retrieve it.
 
-Since this is a security-sensitive operation, you will be asked to log in before your account can be deleted.'''
+Since this is a security-sensitive operation, you will be asked to enter your correct email address before your account can be deleted.'''
                               ),
                               actions: [
                                 TextButton(
