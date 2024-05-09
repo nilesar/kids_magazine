@@ -15,7 +15,7 @@ class AdminStory extends StatelessWidget {
       stream: stry.doc(_storyID).snapshots(),
       builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
         if (snapshot.hasError) {
-          return Text('Something went wrong');
+          return Text('................Something went wrong');
         }
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(child: CircularProgressIndicator());

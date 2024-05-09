@@ -15,7 +15,7 @@ class _DeleteAccountPageState extends State<DeleteAccountPage> {
 
   Future<void> _reauthenticateWithGoogle() async {
     try {
-      // Get the current user
+
       User? user = _auth.currentUser;
 
       if (user != null) {
@@ -33,14 +33,17 @@ class _DeleteAccountPageState extends State<DeleteAccountPage> {
 
           // Reauthenticate the user with Google credentials
           await user.reauthenticateWithCredential(credential);
+
         } else {
-          // Handle the case where the user did not sign in with Google
+
           print('User did not sign in with Google');
+
         }
       }
     } catch (e) {
+
       print('Error reauthenticating user with Google: $e');
-      // Handle errors, show a message to the user, etc.
+
     }
   }
 
@@ -54,8 +57,11 @@ class _DeleteAccountPageState extends State<DeleteAccountPage> {
         await user.delete();
 
         // Sign out the user
-        await _auth.signOut();
-        Navigator.pushNamed(context, "/");
+        await FirebaseAuth.instance.signOut();
+        await GoogleSignIn().signOut();
+        Navigator.pop(context);
+        Navigator.pushReplacementNamed(context, "/");
+
       } else {
         // Handle the case where the provided email does not match the current user's email
         print('Provided email does not match the current user"s email');
@@ -107,6 +113,7 @@ class _DeleteAccountPageState extends State<DeleteAccountPage> {
                     if (currentUser != null && emailInput == currentUser.email) {
                       // Call the function to delete the account with email confirmation
                       await _deleteAccount(emailInput);
+
                     } else {
                       // Handle the case where the entered email does not match the current user's email
                       setState(() {
@@ -140,9 +147,10 @@ class _DeleteAccountPageState extends State<DeleteAccountPage> {
           ),
         ),
       ),
+      backgroundColor: Color(0xFFFFC857),
       body: Container(
 
-        color: Color(0xFFFFC857),
+        // color: Color(0xFFFFC857),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [

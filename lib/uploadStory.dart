@@ -529,85 +529,85 @@ class _UploadStoryState extends State<UploadStory> {
                           ),
                         ],
                       ),
-                      SizedBox(
-                        height: 10.0,
-                      ),
-                      Row(
-                        children: <Widget>[
-                          IconButton(
-                            alignment: Alignment.centerLeft,
-                            icon: Icon(
-                              Icons.add_a_photo,
-                              color: Color(0xFF181621),
-                              size: 40.0,
-                            ),
-                            color: Colors.blue,
-                            onPressed: () async {
-                              await _pickImage(ImageSource.gallery);
-                              if (_image != null) {
-                                await uploadFile();
-                                setState(() {
-                                  imagesInStory
-                                      .add(_uploadedImageURL.toString());
-                                  print(_uploadedImageURL);
-                                  //print(imagesInComplaint);
-                                });
-                              }
-                              // else{
-                              //
-                              // }
-                            },
-                          ),
-                          Text(
-                            ':   ',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(fontSize: 30.0),
-                          ),
-                          Column(
-                            children: imagesInStory
-                                .map((imag) => ImageShow(
-                                name: 'Uploaded Image ',
-                                delete: () {
-                                  setState(() {
-                                    imagesInStory.remove(imag);
-                                  });
-                                }))
-                                .toList(),
-                          )
-                        ],
-                      ),
-                      SizedBox(
-                        height: 20.0,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          SizedBox(
-                            width: 10.0,
-                          ),
-                          Icon(
-                            Icons.audiotrack_rounded,
-                            color: Color(0xFF181621),
-                            size: 45.0,
-                          ),
-                          SizedBox(
-                            width: 30.0,
-                          ),
-                          ElevatedButton(
-                            child: Text(
-                              'Upload Audio File',
-                              style: TextStyle(
-                                color: Colors.black87,
-                                fontSize: 15.0,
-                              ),
-                            ),
-                            onPressed: () => audioFilePicker(context),
-                          ),
-                        ],
-                      ),
+                      // SizedBox(
+                      //   height: 10.0,
+                      // ),
+                      // Row(
+                      //   children: <Widget>[
+                      //     IconButton(
+                      //       alignment: Alignment.centerLeft,
+                      //       icon: Icon(
+                      //         Icons.add_a_photo,
+                      //         color: Color(0xFF181621),
+                      //         size: 40.0,
+                      //       ),
+                      //       color: Colors.blue,
+                      //       onPressed: () async {
+                      //         await _pickImage(ImageSource.gallery);
+                      //         if (_image != null) {
+                      //           await uploadFile();
+                      //           setState(() {
+                      //             imagesInStory
+                      //                 .add(_uploadedImageURL.toString());
+                      //             print(_uploadedImageURL);
+                      //             //print(imagesInComplaint);
+                      //           });
+                      //         }
+                      //         // else{
+                      //         //
+                      //         // }
+                      //       },
+                      //     ),
+                      //     Text(
+                      //       ':   ',
+                      //       textAlign: TextAlign.center,
+                      //       style: TextStyle(fontSize: 30.0),
+                      //     ),
+                      //     Column(
+                      //       children: imagesInStory
+                      //           .map((imag) => ImageShow(
+                      //           name: 'Uploaded Image ',
+                      //           delete: () {
+                      //             setState(() {
+                      //               imagesInStory.remove(imag);
+                      //             });
+                      //           }))
+                      //           .toList(),
+                      //     )
+                      //   ],
+                      // ),
                       SizedBox(
                         height: 20.0,
                       ),
+                      // Row(
+                      //   mainAxisAlignment: MainAxisAlignment.start,
+                      //   children: [
+                      //     SizedBox(
+                      //       width: 10.0,
+                      //     ),
+                      //     Icon(
+                      //       Icons.audiotrack_rounded,
+                      //       color: Color(0xFF181621),
+                      //       size: 45.0,
+                      //     ),
+                      //     SizedBox(
+                      //       width: 30.0,
+                      //     ),
+                      //     ElevatedButton(
+                      //       child: Text(
+                      //         'Upload Audio File',
+                      //         style: TextStyle(
+                      //           color: Colors.black87,
+                      //           fontSize: 15.0,
+                      //         ),
+                      //       ),
+                      //       onPressed: () => audioFilePicker(context),
+                      //     ),
+                      //   ],
+                      // ),
+                      // SizedBox(
+                      //   height: 20.0,
+                      // ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [

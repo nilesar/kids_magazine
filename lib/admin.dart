@@ -49,7 +49,7 @@ class _AdminPageState extends State<AdminPage> {
                     builder: (BuildContext context,
                         AsyncSnapshot<QuerySnapshot> snapshot) {
                       if (snapshot.hasError) {
-                        return Center(child: Text('Something went wrong',
+                        return Center(child: Text('...........Something went wrong',
                         style: TextStyle(
                           fontSize: 16,
                           color: Colors.black87,
