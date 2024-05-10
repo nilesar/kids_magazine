@@ -69,7 +69,7 @@ class _HomePageState extends State<HomePage> {
                 align: ContentAlign.bottom,
                 builder: (context, controller){
                   return CoachmarkDesc(
-                    text: "click here to acsess navigation bar",
+                    text: "click here to access navigation bar",
                     onNext: (){
                       controller.next();
                     },

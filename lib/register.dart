@@ -30,7 +30,7 @@ class _RegisterPageState extends State<RegisterPage> {
       'name': _nameController.text,
       'uid': user!.uid,
       'email': user!.email,
-      'phone': int.parse(_phoneNoController.text),
+      // 'phone': int.parse(_phoneNoController.text),
       'age': _ageController.text,
       'type': 'user',
     });
@@ -143,48 +143,48 @@ class _RegisterPageState extends State<RegisterPage> {
                                 SizedBox(
                                   height: 20.0,
                                 ),
-                                TextFormField(
-                                  validator: (value) {
-                                    if (value == "") {
-                                      return 'Phone Number cannot be left Empty';
-                                    }
-                                    final n = num.tryParse(value!);
-                                    if (n == null) {
-                                      return '"$value" is not a valid phone number';
-                                    }
-                                    if (value.length != 10)
-                                      return 'Roll Number must contain 10 digits';
-                                    return null;
-                                  },
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                  ),
-                                  cursorColor: Colors.white,
-                                  controller: _phoneNoController,
-                                  keyboardType: TextInputType.number,
-                                  decoration: InputDecoration(
-                                    labelStyle: TextStyle(
-                                      color: Color(0xFFFFC857),
-                                    ),
-                                    labelText: 'Phone No.',
-                                    focusedBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(30.0)),
-                                      borderSide: BorderSide(
-                                        color: Color(0xFFFFC857),
-                                        width: 3.0,
-                                      ),
-                                    ),
-                                    enabledBorder: OutlineInputBorder(
-                                      borderRadius: BorderRadius.all(
-                                          Radius.circular(30.0)),
-                                      borderSide: BorderSide(
-                                        color: Color(0xFFFFC857),
-                                        width: 3.0,
-                                      ),
-                                    ),
-                                  ),
-                                ),
+                                // TextFormField(
+                                //   validator: (value) {
+                                //     if (value == "") {
+                                //       return 'Phone Number cannot be left Empty';
+                                //     }
+                                //     final n = num.tryParse(value!);
+                                //     if (n == null) {
+                                //       return '"$value" is not a valid phone number';
+                                //     }
+                                //     if (value.length != 10)
+                                //       return 'Roll Number must contain 10 digits';
+                                //     return null;
+                                //   },
+                                //   style: TextStyle(
+                                //     color: Colors.white,
+                                //   ),
+                                //   cursorColor: Colors.white,
+                                //   controller: _phoneNoController,
+                                //   keyboardType: TextInputType.number,
+                                //   decoration: InputDecoration(
+                                //     labelStyle: TextStyle(
+                                //       color: Color(0xFFFFC857),
+                                //     ),
+                                //     labelText: 'Phone No.',
+                                //     focusedBorder: OutlineInputBorder(
+                                //       borderRadius: BorderRadius.all(
+                                //           Radius.circular(30.0)),
+                                //       borderSide: BorderSide(
+                                //         color: Color(0xFFFFC857),
+                                //         width: 3.0,
+                                //       ),
+                                //     ),
+                                //     enabledBorder: OutlineInputBorder(
+                                //       borderRadius: BorderRadius.all(
+                                //           Radius.circular(30.0)),
+                                //       borderSide: BorderSide(
+                                //         color: Color(0xFFFFC857),
+                                //         width: 3.0,
+                                //       ),
+                                //     ),
+                                //   ),
+                                // ),
                                 SizedBox(
                                   height: 20.0,
                                 ),
