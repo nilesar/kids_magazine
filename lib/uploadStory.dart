@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:kids_magazine/home.dart';
 import 'package:path/path.dart' as path;
 import 'package:firebase_storage/firebase_storage.dart';
@@ -9,6 +8,7 @@ import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'custom_transliterate.dart';
+
 String title = '';
 String story = '';
 String author = '';
@@ -51,6 +51,7 @@ class ImageShow extends StatelessWidget {
     );
   }
 }
+
 //ignore: must_be_immutable
 class UploadStory extends StatefulWidget {
   late UploadTask task;
@@ -128,9 +129,6 @@ class _UploadStoryState extends State<UploadStory> {
     }
   }
 
-  // uploading story text file to firebase
-
-
   Future<void> _uploadFile(File? file, String? filename) async {
     File _file = File(file!.path.toString());
     Reference storageReference;
@@ -144,9 +142,6 @@ class _UploadStoryState extends State<UploadStory> {
     story = await file.readAsString();
     print(story);
   }
-
-
-  // picking up audio file
 
   Future audioFilePicker(BuildContext context) async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
@@ -166,7 +161,7 @@ class _UploadStoryState extends State<UploadStory> {
     print(audioFileName.substring(
         audioFileName.length - 3, audioFileName.length));
     String extension =
-    audioFileName.substring(audioFileName.length - 3, audioFileName.length);
+        audioFileName.substring(audioFileName.length - 3, audioFileName.length);
     if (extension == "wav" ||
         extension == "mp3" ||
         extension == "m4a" ||
@@ -225,7 +220,13 @@ class _UploadStoryState extends State<UploadStory> {
 
 // Selecting language
 
-  List<String> languages = ['Bengali', 'Gujarati', 'Telugu','Marathi'];
+  List<String> languages = [
+    'Bengali',
+    'Gujarati',
+    'Telugu',
+    'Marathi',
+    'Hindi'
+  ];
 
   void initState() {
     super.initState();
@@ -253,15 +254,6 @@ class _UploadStoryState extends State<UploadStory> {
   String? _uploadedImageURL;
   List<String> imagesInStory = [];
 
-  Future<void> _pickImage(ImageSource source) async {
-    ImagePicker picker = ImagePicker();
-    await picker.pickImage(source: ImageSource.gallery).then((img) {
-      setState(() {
-        _image = File(img!.path);
-      });
-    });
-  }
-
   Future uploadFile() async {
     Reference storageReference = FirebaseStorage.instance
         .ref()
@@ -272,40 +264,33 @@ class _UploadStoryState extends State<UploadStory> {
     print('Image Uploaded');
   }
 
-// getting current user
   User? user = FirebaseAuth.instance.currentUser;
 
 // setting various fields in form
   void formProcessor() async {
     final database = FirebaseFirestore.instance.collection('stories');
     print('Original Story Text: $story');
-
-    // Transliterate the story text
-
-    String transliteratedText = ''; // Declare the variable outside the try block
-
-
-    // Determine the default script based on the selected language
+    String transliteratedText =
+        '';    
     print(selectedLanguage);
     switch (selectedLanguage) {
-    //   case 'marathi':
-    // transliteratedText = transliterateBengali( story );
-    //     break;
       case 'Telugu':
-        transliteratedText = transliterateTelugu( story );
+        transliteratedText = transliterateTelugu(story);
         break;
       case 'Bengali':
         transliteratedText = transliterateBengali(story);
         break;
       case 'Gujarati':
-        transliteratedText = transliterateGujarati( story );
+        transliteratedText = transliterateGujarati(story);
         break;
       case 'Marathi':
-        transliteratedText = transliterateMarathi( story );
-        break;// Default to Devanagari
+        transliteratedText = transliterateMarathi(story);
+        break; // Default to Devanagari
+      case 'Hindi':
+        transliteratedText = transliterateHindi(story);
+        break;
     }
     print('transliterated: $transliteratedText');
-
 
     // Save the document with the transliterated text
     await database.doc().set({
@@ -320,10 +305,6 @@ class _UploadStoryState extends State<UploadStory> {
       'status': 'waiting',
     });
   }
-
-
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -386,7 +367,7 @@ class _UploadStoryState extends State<UploadStory> {
                           labelText: 'Title',
                           focusedBorder: OutlineInputBorder(
                             borderRadius:
-                            BorderRadius.all(Radius.circular(30.0)),
+                                BorderRadius.all(Radius.circular(30.0)),
                             borderSide: BorderSide(
                               color: Color(0xFF181621),
                               width: 3.0,
@@ -394,7 +375,7 @@ class _UploadStoryState extends State<UploadStory> {
                           ),
                           enabledBorder: OutlineInputBorder(
                             borderRadius:
-                            BorderRadius.all(Radius.circular(30.0)),
+                                BorderRadius.all(Radius.circular(30.0)),
                             borderSide: BorderSide(
                               color: Color(0xFF181621),
                               width: 3.0,
@@ -428,7 +409,7 @@ class _UploadStoryState extends State<UploadStory> {
                           labelText: 'Author',
                           focusedBorder: OutlineInputBorder(
                             borderRadius:
-                            BorderRadius.all(Radius.circular(30.0)),
+                                BorderRadius.all(Radius.circular(30.0)),
                             borderSide: BorderSide(
                               color: Color(0xFF181621),
                               width: 3.0,
@@ -436,7 +417,7 @@ class _UploadStoryState extends State<UploadStory> {
                           ),
                           enabledBorder: OutlineInputBorder(
                             borderRadius:
-                            BorderRadius.all(Radius.circular(30.0)),
+                                BorderRadius.all(Radius.circular(30.0)),
                             borderSide: BorderSide(
                               color: Color(0xFF181621),
                               width: 3.0,
@@ -466,7 +447,7 @@ class _UploadStoryState extends State<UploadStory> {
                           labelText: 'Story Text',
                           focusedBorder: OutlineInputBorder(
                             borderRadius:
-                            BorderRadius.all(Radius.circular(30.0)),
+                                BorderRadius.all(Radius.circular(30.0)),
                             borderSide: BorderSide(
                               color: Color(0xFF181621),
                               width: 3.0,
@@ -474,7 +455,7 @@ class _UploadStoryState extends State<UploadStory> {
                           ),
                           enabledBorder: OutlineInputBorder(
                             borderRadius:
-                            BorderRadius.all(Radius.circular(30.0)),
+                                BorderRadius.all(Radius.circular(30.0)),
                             borderSide: BorderSide(
                               color: Color(0xFF181621),
                               width: 3.0,
@@ -529,85 +510,9 @@ class _UploadStoryState extends State<UploadStory> {
                           ),
                         ],
                       ),
-                      // SizedBox(
-                      //   height: 10.0,
-                      // ),
-                      // Row(
-                      //   children: <Widget>[
-                      //     IconButton(
-                      //       alignment: Alignment.centerLeft,
-                      //       icon: Icon(
-                      //         Icons.add_a_photo,
-                      //         color: Color(0xFF181621),
-                      //         size: 40.0,
-                      //       ),
-                      //       color: Colors.blue,
-                      //       onPressed: () async {
-                      //         await _pickImage(ImageSource.gallery);
-                      //         if (_image != null) {
-                      //           await uploadFile();
-                      //           setState(() {
-                      //             imagesInStory
-                      //                 .add(_uploadedImageURL.toString());
-                      //             print(_uploadedImageURL);
-                      //             //print(imagesInComplaint);
-                      //           });
-                      //         }
-                      //         // else{
-                      //         //
-                      //         // }
-                      //       },
-                      //     ),
-                      //     Text(
-                      //       ':   ',
-                      //       textAlign: TextAlign.center,
-                      //       style: TextStyle(fontSize: 30.0),
-                      //     ),
-                      //     Column(
-                      //       children: imagesInStory
-                      //           .map((imag) => ImageShow(
-                      //           name: 'Uploaded Image ',
-                      //           delete: () {
-                      //             setState(() {
-                      //               imagesInStory.remove(imag);
-                      //             });
-                      //           }))
-                      //           .toList(),
-                      //     )
-                      //   ],
-                      // ),
                       SizedBox(
                         height: 20.0,
                       ),
-                      // Row(
-                      //   mainAxisAlignment: MainAxisAlignment.start,
-                      //   children: [
-                      //     SizedBox(
-                      //       width: 10.0,
-                      //     ),
-                      //     Icon(
-                      //       Icons.audiotrack_rounded,
-                      //       color: Color(0xFF181621),
-                      //       size: 45.0,
-                      //     ),
-                      //     SizedBox(
-                      //       width: 30.0,
-                      //     ),
-                      //     ElevatedButton(
-                      //       child: Text(
-                      //         'Upload Audio File',
-                      //         style: TextStyle(
-                      //           color: Colors.black87,
-                      //           fontSize: 15.0,
-                      //         ),
-                      //       ),
-                      //       onPressed: () => audioFilePicker(context),
-                      //     ),
-                      //   ],
-                      // ),
-                      // SizedBox(
-                      //   height: 20.0,
-                      // ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [

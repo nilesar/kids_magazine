@@ -9,11 +9,12 @@ class AdminStory extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final CollectionReference stry =
-    FirebaseFirestore.instance.collection('stories');
+        FirebaseFirestore.instance.collection('stories');
 
     return StreamBuilder<DocumentSnapshot>(
       stream: stry.doc(_storyID).snapshots(),
-      builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+      builder:
+          (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
         if (snapshot.hasError) {
           return Text('................Something went wrong');
         }
@@ -93,7 +94,9 @@ class AdminStory extends StatelessWidget {
                     children: [
                       ElevatedButton(
                         onPressed: () async {
-                          await stry.doc(_storyID).update({'status': 'approved'});
+                          await stry
+                              .doc(_storyID)
+                              .update({'status': 'approved'});
                           Navigator.pop(context, '/');
                         },
                         child: Padding(

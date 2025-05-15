@@ -8,13 +8,14 @@ class Transliterate extends StatefulWidget {
   final String t_text;
   final FlutterTts flutterTts;
 
-  Transliterate(this._storyID, this.flutterTts, String t_text) : t_text = t_text;
+  Transliterate(this._storyID, this.flutterTts, String t_text)
+      : t_text = t_text;
 
   @override
   _TransliterateState createState() => _TransliterateState();
 }
 
-enum TtsState { playing, stopped, paused, continued}
+enum TtsState { playing, stopped, paused, continued }
 
 class _TransliterateState extends State<Transliterate> {
   CollectionReference stry = FirebaseFirestore.instance.collection('stories');
@@ -40,6 +41,7 @@ class _TransliterateState extends State<Transliterate> {
     if (language == "Bengali") widget.flutterTts.setLanguage("bn-IN");
     if (language == "Telugu") widget.flutterTts.setLanguage("te-IN");
     if (language == "Marathi") widget.flutterTts.setLanguage("mr-IN");
+    if (language == "Hindii") widget.flutterTts.setLanguage("hi-IN");
 
     print(language);
     await widget.flutterTts.awaitSpeakCompletion(true);

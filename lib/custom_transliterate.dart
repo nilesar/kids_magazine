@@ -350,6 +350,9 @@ String hindi2itran(String? hindiString) {
 
   return itranString.join();
 }
+String transliterateHindi(String? text) {
+  return hindi2itran(text);
+}
 
 String transliterateMarathi(String? text) {
   return hindi2itran(text);

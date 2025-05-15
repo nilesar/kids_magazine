@@ -33,7 +33,7 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
-    compileSdkVersion 33
+    compileSdkVersion 35
 
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
@@ -43,10 +43,19 @@ android {
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "com.irlab.kids_magazine"
-        minSdkVersion 21
-        targetSdkVersion 33
-        versionCode 11
-        versionName "4.0.1"
+        minSdkVersion 24
+        targetSdkVersion 35
+        versionCode 12
+        versionName "5.0.0"
+    }
+     
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    kotlinOptions {
+        jvmTarget = "17"
     }
 
     signingConfigs {
@@ -94,3 +103,8 @@ repositories {
   maven { url 'https://dl.bintray.com/kotlin/kotlin-eap' }
 }
 //android.buildTypes.release.ndk.debugSymbolLevel = 'FULL'
+//debug {
+//    // fix Failed to transform firebase-auth-22.3.1.aar
+//    minifyEnabled true
+//    signingConfig signingConfigs.debug
+//}

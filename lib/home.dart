@@ -1,17 +1,16 @@
-import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:kids_magazine/BengaliStoryPage.dart';
 import 'package:kids_magazine/register.dart';
 import 'package:kids_magazine/select.dart';
-import 'package:kids_magazine/story.dart';
 import 'package:kids_magazine/uploadStory.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 import 'admin.dart';
 import 'my_uploads.dart';
 import 'package:shared_preferences/shared_preferences.dart'; // Add this import
-
+import 'package:kids_magazine/others.dart';
 
 class HomePage extends StatefulWidget {
   final String _SelectedLanguage;
@@ -59,30 +58,23 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  void _initTarget(){
+  void _initTarget() {
     targets = [
-      TargetFocus(
-          identify: "login",
-          keyTarget: navKey,
-          contents: [
-            TargetContent(
-                align: ContentAlign.bottom,
-                builder: (context, controller){
-                  return CoachmarkDesc(
-                    text: "click here to access navigation bar",
-                    onNext: (){
-                      controller.next();
-                    },
-                    onSkip: (){
-                      controller.skip();
-                    },
-                  );
-                }
-            )
-          ]
-      ),
-
-
+      TargetFocus(identify: "login", keyTarget: navKey, contents: [
+        TargetContent(
+            align: ContentAlign.bottom,
+            builder: (context, controller) {
+              return CoachmarkDesc(
+                text: "Click here to access navigation bar",
+                onNext: () {
+                  controller.next();
+                },
+                onSkip: () {
+                  controller.skip();
+                },
+              );
+            })
+      ]),
     ];
   }
 
@@ -92,13 +84,12 @@ class _HomePageState extends State<HomePage> {
       key: _scaffoldKey,
       drawer: NavDrawer(widget._SelectedLanguage),
       appBar: AppBar(
-
-        backgroundColor: Color(0xFF00073e),
+        backgroundColor: Color.fromARGB(255, 25, 4, 131),
         leading: IconButton(
           icon: Icon(
             key: navKey,
             Icons.menu,
-            color: Color(0xFFFFC857),
+            color: Color.fromARGB(255, 242, 193, 96),
             size: 30.0,
           ),
           onPressed: () => _scaffoldKey.currentState!.openDrawer(),
@@ -108,12 +99,12 @@ class _HomePageState extends State<HomePage> {
           style: TextStyle(
             fontSize: 25.0,
             fontFamily: 'Amaranth',
-            color:Color(0xFFFFC857),
+            color: Color.fromARGB(255, 249, 208, 125),
           ),
         ),
       ),
       body: Container(
-          color: Color(0xFFFFC857),
+          color: Color.fromARGB(255, 249, 197, 94),
           child: Column(
             children: [
               SizedBox(
@@ -121,50 +112,64 @@ class _HomePageState extends State<HomePage> {
               ),
               Flexible(
                 child: RawScrollbar(
-                  thumbColor: Colors.black38,
+                  thumbColor: const Color.fromARGB(96, 10, 0, 24),
                   thickness: 4,
                   child: StreamBuilder<QuerySnapshot>(
                       stream: FirebaseFirestore.instance
                           .collection('stories')
-                          .where("language", isEqualTo: widget._SelectedLanguage)
+                          .where("language",
+                              isEqualTo: widget._SelectedLanguage)
                           .snapshots(),
                       builder: (BuildContext context,
                           AsyncSnapshot<QuerySnapshot> snapshot) {
                         if (snapshot.hasError) {
                           return Text('Something went wrong');
                         }
-                        if (snapshot.connectionState == ConnectionState.waiting) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
                           return Center(
                             child: CircularProgressIndicator(),
                           );
                         }
-                        List<Widget> stories =
-                        snapshot.data!.docs.map((DocumentSnapshot document) {
+                        List<Widget> stories = snapshot.data!.docs
+                            .map((DocumentSnapshot document) {
                           print(document['image']);
                           //if (document['image'] == null)
                           img.doc(document.id).update({
                             'image':
-                            'https://firebasestorage.googleapis.com/v0/b/kids-magazine-c41d5.appspot.com/o/storyImages%2Fbulletin.jpeg?alt=media&token=4326548d-263a-4a19-b509-5a18477c3ce6'
+                                'https://firebasestorage.googleapis.com/v0/b/kids-magazine-c41d5.appspot.com/o/storyImages%2Fbulletin.jpeg?alt=media&token=4326548d-263a-4a19-b509-5a18477c3ce6'
                           });
                           if (document['status'] == 'approved')
                             return GestureDetector(
                               onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-
-                                      builder: (context) => Story(document.id)),
-                                );
+                                if (widget._SelectedLanguage == "Bengali") {
+                                  // Navigate to a different page for Bengali stories
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          BengaliStory(document.id),
+                                    ),
+                                  );
+                                } else {
+                                  // Navigate to the existing story page
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          otherStory(document.id),
+                                    ),
+                                  );
+                                }
                               },
                               child: Padding(
-                                padding: const EdgeInsets.fromLTRB(
-                                    10.0, 2.0, 10.0, 2.0),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 10.0, vertical: 5.0),
                                 child: Card(
-                                  color: Color.fromARGB(255, 238, 222, 187),
+                                  color: Color.fromARGB(255, 244, 235, 216),
                                   elevation: 10.0,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(30),
-                                    // if you need this
                                     side: BorderSide(
                                       color: Colors.transparent,
                                     ),
@@ -173,91 +178,89 @@ class _HomePageState extends State<HomePage> {
                                     color: Colors.transparent,
                                     width: 180,
                                     height: 100,
+                                    padding: const EdgeInsets.all(
+                                        10.0), // Consistent inner padding
                                     child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
                                       crossAxisAlignment:
-                                      CrossAxisAlignment.center,
+                                          CrossAxisAlignment.center,
                                       children: [
-                                        SizedBox(
-                                          width: 10.0,
-                                        ),
-                                        Container(
-                                          width: 30.0,
-                                          height: 30.0,
-                                          decoration: new BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            image: new DecorationImage(
-                                              fit: BoxFit.fill,
-                                              image: NetworkImage(
-                                                document['image'],
-                                              ),
-                                            ),
+                                        // Logo with half white and half black
+                                        ShaderMask(
+                                          shaderCallback: (Rect bounds) {
+                                            return LinearGradient(
+                                              colors: [
+                                                Colors.white,
+                                                Colors.black
+                                              ],
+                                              begin: Alignment.topLeft,
+                                              end: Alignment.bottomRight,
+                                            ).createShader(bounds);
+                                          },
+                                          blendMode: BlendMode.srcATop,
+                                          child: Icon(
+                                            Icons.bookmark_rounded,
+                                            size: 32.0,
+                                            color: Colors.black,
                                           ),
                                         ),
                                         SizedBox(
-                                          width: 10.0,
-                                        ),
-                                        Flexible(
+                                            width:
+                                                10.0), // Spacing between logo and text
+                                        // Text Column
+                                        Expanded(
                                           child: Column(
                                             mainAxisAlignment:
-                                            MainAxisAlignment.center,
+                                                MainAxisAlignment.center,
                                             crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                                CrossAxisAlignment.start,
                                             children: [
+                                              // Title Text
                                               Text(
                                                 document['title'],
                                                 maxLines: 2,
                                                 overflow: TextOverflow.ellipsis,
                                                 style: TextStyle(
-                                                  fontSize: 22.0,
+                                                  fontSize: 20.0,
                                                   fontFamily: 'JosefinSans',
                                                   fontWeight: FontWeight.w400,
-                                                  color:Colors.black,
+                                                  color: Colors.black,
                                                 ),
                                               ),
                                               SizedBox(
-                                                height: 7.0,
-                                              ),
+                                                  height:
+                                                      5.0), // Space between title and author
+                                              // Author Row
                                               Row(
-                                                mainAxisAlignment:
-                                                MainAxisAlignment.start,
                                                 children: [
-                                                  SizedBox(
-                                                    width: 70.0,
-                                                  ),
                                                   Text(
-                                                    "~ ",
-                                                    overflow:
-                                                    TextOverflow.ellipsis,
+                                                    "--",
                                                     style: TextStyle(
                                                       fontSize: 15.0,
                                                       fontFamily: 'JosefinSans',
                                                       color: Colors.black,
                                                     ),
                                                   ),
+                                                  SizedBox(width: 5.0),
                                                   Flexible(
                                                     child: Text(
                                                       document['author'],
                                                       maxLines: 1,
                                                       overflow:
-                                                      TextOverflow.ellipsis,
+                                                          TextOverflow.ellipsis,
                                                       style: TextStyle(
                                                         fontSize: 15.0,
-                                                        fontFamily: 'JosefinSans',
+                                                        fontFamily:
+                                                            'JosefinSans',
                                                         color: Colors.black,
                                                       ),
                                                     ),
-                                                  ),
-                                                  SizedBox(
-                                                    width: 20.0,
                                                   ),
                                                 ],
                                               ),
                                             ],
                                           ),
-                                        ),
-                                        SizedBox(
-                                          width: 10.0,
                                         ),
                                       ],
                                     ),
@@ -306,7 +309,6 @@ class NavDrawer extends StatefulWidget {
 }
 
 class _NavDrawerState extends State<NavDrawer> {
-
   TutorialCoachMark? tutorialCoachMark;
   List<TargetFocus> targets = [];
 
@@ -316,13 +318,11 @@ class _NavDrawerState extends State<NavDrawer> {
 
   @override
   void initState() {
-    // TODO: implement initState
-    if(user == null) {
+    if (user == null) {
       Future.delayed(const Duration(seconds: 1), () {
         _showTutorialCoachmark();
       });
-    }
-    else if(user != null){
+    } else if (user != null) {
       Future.delayed(const Duration(seconds: 1), () {
         _showuploadTutorial();
       });
@@ -343,6 +343,7 @@ class _NavDrawerState extends State<NavDrawer> {
       prefs.setBool('tutorialShownsidebar', true);
     }
   }
+
   void _showuploadTutorial() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool tutorialShown = prefs.getBool('tutorialShownupload') ?? false;
@@ -357,52 +358,43 @@ class _NavDrawerState extends State<NavDrawer> {
     }
   }
 
-
-  void _initTarget(){
-    targets=[
-      TargetFocus(
-          identify: "register",
-          keyTarget: registerKey,
-          contents: [
-            TargetContent(
-                align: ContentAlign.bottom,
-                builder: (context, controller){
-                  return CoachmarkDesc(
-                    text: "click here to register. \nOnce you login you can Upload stories of your own!",
-                    onNext: (){
-                      controller.next();
-                    },
-                    onSkip: (){
-                      controller.skip();
-                    },
-                  );
-                }
-            )
-          ]
-      ),
-      TargetFocus(
-          identify: "login",
-          keyTarget: loginKey,
-          contents: [
-            TargetContent(
-                align: ContentAlign.bottom,
-                builder: (context, controller){
-                  return CoachmarkDesc(
-                    text: "click here to login. \nOnce you login you can Upload stories of your own!",
-                    onNext: (){
-                      controller.next();
-                    },
-                    onSkip: (){
-                      controller.skip();
-                    },
-                  );
-                }
-            )
-          ]
-      ),
-
+  void _initTarget() {
+    targets = [
+      TargetFocus(identify: "register", keyTarget: registerKey, contents: [
+        TargetContent(
+            align: ContentAlign.bottom,
+            builder: (context, controller) {
+              return CoachmarkDesc(
+                text:
+                    "click here to register. \nOnce you login you can Upload stories of your own!",
+                onNext: () {
+                  controller.next();
+                },
+                onSkip: () {
+                  controller.skip();
+                },
+              );
+            })
+      ]),
+      TargetFocus(identify: "login", keyTarget: loginKey, contents: [
+        TargetContent(
+            align: ContentAlign.bottom,
+            builder: (context, controller) {
+              return CoachmarkDesc(
+                text:
+                    "Click here to login. \nOnce you login you can upload stories of your own!",
+                onNext: () {
+                  controller.next();
+                },
+                onSkip: () {
+                  controller.skip();
+                },
+              );
+            })
+      ]),
     ];
   }
+
   void _initLoggedInTargets() {
     // Define targets for logged-in users
     targets = [
@@ -444,13 +436,13 @@ class _NavDrawerState extends State<NavDrawer> {
     // final String email = googleUser.email;
 
     final GoogleSignInAuthentication googleAuth =
-    await googleUser!.authentication;
+        await googleUser!.authentication;
     final AuthCredential credential = GoogleAuthProvider.credential(
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
     );
     final UserCredential _currentUser =
-    await FirebaseAuth.instance.signInWithCredential(credential);
+        await FirebaseAuth.instance.signInWithCredential(credential);
 
     if (_currentUser.additionalUserInfo!.isNewUser) {
       // The user is just created
@@ -462,7 +454,8 @@ class _NavDrawerState extends State<NavDrawer> {
     } else {
       // The user is already there, so redirect to feed
 
-      if (_currentUser.user!.email == 'irlabiit0@gmail.com') {
+      if (_currentUser.user!.email == 'irlabiit0@gmail.com' ||
+          _currentUser.user!.email == 'nilendu.adhikary.cd.cse23@itbhu.ac.in') {
         //take to the admin side
         Navigator.pop(context);
         Navigator.push(
@@ -480,6 +473,7 @@ class _NavDrawerState extends State<NavDrawer> {
     }
     return null;
   }
+  
 
   @override
   Widget build(BuildContext context) {
@@ -501,26 +495,22 @@ class _NavDrawerState extends State<NavDrawer> {
               ),
               decoration: BoxDecoration(
                   image: DecorationImage(
-                    fit: BoxFit.cover,
-                    image: AssetImage("assets/solid-color-image.jpeg"),
-                  )),
+                fit: BoxFit.cover,
+                image: AssetImage("assets/bg.jpg"),
+              )),
             ),
             Container(
               color: Color(0xFFFFC857),
               child: Column(
-
                 children: [
-
                   if (user == null)
                     ListTile(
-
                       leading: Icon(
-                        key:loginKey,
+                        key: loginKey,
                         Icons.login,
                         color: Color(0xFF181621),
                       ),
                       title: Text(
-
                         'Login',
                         style: TextStyle(
                           fontSize: 18.0,
@@ -534,7 +524,7 @@ class _NavDrawerState extends State<NavDrawer> {
                   if (user == null)
                     ListTile(
                       leading: Icon(
-                        key:registerKey,
+                        key: registerKey,
                         Icons.login_sharp,
                         color: Color(0xFF181621),
                       ),
@@ -574,7 +564,7 @@ class _NavDrawerState extends State<NavDrawer> {
                   if (user != null)
                     ListTile(
                       leading: Icon(
-                        key:uploadkey,
+                        key: uploadkey,
                         Icons.upload_rounded,
                         color: Color(0xFF181621),
                       ),
@@ -598,7 +588,9 @@ class _NavDrawerState extends State<NavDrawer> {
                     ),
                   if (user != null &&
                       (user!.email == 'pkenny.mukeshbhai.cse19@itbhu.ac.in' ||
-                          user!.email == "irlabiit0@gmail.com"))
+                          user!.email == "irlabiit0@gmail.com" ||
+                          user!.email ==
+                              'nilendu.adhikary.cd.cse23@itbhu.ac.in'))
                     ListTile(
                       leading: Icon(
                         Icons.upload_file,
@@ -639,8 +631,7 @@ class _NavDrawerState extends State<NavDrawer> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) =>
-                                  MyUploads(user!.uid)),
+                              builder: (context) => MyUploads(user!.uid)),
                         );
                       },
                     ),
@@ -669,8 +660,7 @@ class _NavDrawerState extends State<NavDrawer> {
 
 Your app data will also be deleted, and you won't be able to retrieve it.
 
-Since this is a security-sensitive operation, you will be asked to enter your correct email address before your account can be deleted.'''
-                              ),
+Since this is a security-sensitive operation, you will be asked to enter your correct email address before your account can be deleted.'''),
                               actions: [
                                 TextButton(
                                   child: const Text('Cancel'),

@@ -1,9 +1,10 @@
+// this page is for selecting diffrent language
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:kids_magazine/home.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 import 'package:shared_preferences/shared_preferences.dart'; // Add this import
-
 
 class SelectLanguage extends StatefulWidget {
   @override
@@ -17,6 +18,7 @@ class _SelectLanguageState extends State<SelectLanguage> {
   GlobalKey selectGujaratiKey = GlobalKey();
   GlobalKey selectTeluguKey = GlobalKey();
   GlobalKey selectMarathiKey = GlobalKey();
+  GlobalKey selectHindiKey = GlobalKey();
   bool isLoggedIn = false;
   bool isTutorialShown = false;
 
@@ -63,54 +65,49 @@ class _SelectLanguageState extends State<SelectLanguage> {
     prefs.setBool('isTutorialShown', true);
   }
 
-
-  void _initTarget(){
+  void _initTarget() {
     targets = [
-      TargetFocus(
-          identify: "select",
-          keyTarget: selectBengaliKey,
-          contents: [
-            TargetContent(
-                align: ContentAlign.bottom,
-                builder: (context, controller){
-                  return CoachmarkDesc(
-                    text: "Select A Language",
-                    onNext: (){
-                      controller.next();
-                    },
-                    onSkip: (){
-                      controller.skip();
-                    },
-                  );
-                }
-            )
-          ]
-      ),
-
+      TargetFocus(identify: "select", keyTarget: selectBengaliKey, contents: [
+        TargetContent(
+            align: ContentAlign.bottom,
+            builder: (context, controller) {
+              return CoachmarkDesc(
+                text: "Select a Language",
+                onNext: () {
+                  controller.next();
+                },
+                onSkip: () {
+                  controller.skip();
+                },
+              );
+            })
+      ]),
     ];
   }
+
   @override
   Widget build(BuildContext context) {
     return Container(
       color: Color(0xFFFFC857),
       child: Column(
         children: [
-          SizedBox(height: 120.0),
+          SizedBox(height: 110.0),
           Text(
             "Select your Language",
             style: TextStyle(
-              fontSize: 30.0,
+              fontSize: 32.0,
               fontFamily: 'JosefinSans',
               decoration: TextDecoration.none,
               color: Color(0xFF181621),
             ),
           ),
           SizedBox(
-            height: 75.0,
+            height: 65.0,
           ),
           ElevatedButton(
             key: selectBengaliKey,
             style: ElevatedButton.styleFrom(
+              minimumSize: const Size(200, 50),
               padding: EdgeInsets.fromLTRB(45.0, 12.0, 45.0, 9.0),
               elevation: 20.0,
               shape: RoundedRectangleBorder(
@@ -125,7 +122,9 @@ class _SelectLanguageState extends State<SelectLanguage> {
               Navigator.pop(context);
               Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => HomePage("Bengali")),
+                MaterialPageRoute(
+                    builder: (context) =>
+                        HomePage("Bengali")), //only part i have to change
               );
             },
             child: Padding(
@@ -141,11 +140,12 @@ class _SelectLanguageState extends State<SelectLanguage> {
             ),
           ),
           SizedBox(
-            height: 50,
+            height: 40,
           ),
           ElevatedButton(
             key: selectGujaratiKey,
             style: ElevatedButton.styleFrom(
+              minimumSize: const Size(200, 50),
               padding: EdgeInsets.fromLTRB(50.0, 12.0, 50.0, 9.0),
               elevation: 20.0,
               shape: RoundedRectangleBorder(
@@ -170,17 +170,18 @@ class _SelectLanguageState extends State<SelectLanguage> {
                 style: TextStyle(
                   fontSize: 23.0,
                   fontFamily: 'Amaranth',
-                  color:Color.fromARGB(255, 0, 0, 0),
+                  color: Color.fromARGB(255, 0, 0, 0),
                 ),
               ),
             ),
           ),
           SizedBox(
-            height: 50,
+            height: 40,
           ),
           ElevatedButton(
             key: selectTeluguKey,
             style: ElevatedButton.styleFrom(
+              minimumSize: const Size(200, 50),
               padding: EdgeInsets.fromLTRB(50.0, 12.0, 50.0, 9.0),
               elevation: 20.0,
               shape: RoundedRectangleBorder(
@@ -211,11 +212,12 @@ class _SelectLanguageState extends State<SelectLanguage> {
             ),
           ),
           SizedBox(
-            height: 50,
+            height: 40,
           ),
           ElevatedButton(
             key: selectMarathiKey,
             style: ElevatedButton.styleFrom(
+              minimumSize: const Size(200, 50),
               padding: EdgeInsets.fromLTRB(45.0, 12.0, 45.0, 9.0),
               elevation: 20.0,
               shape: RoundedRectangleBorder(
@@ -245,17 +247,54 @@ class _SelectLanguageState extends State<SelectLanguage> {
               ),
             ),
           ),
+          SizedBox(
+            height: 40,
+          ),
+          ElevatedButton(
+            key: selectHindiKey,
+            style: ElevatedButton.styleFrom(
+              minimumSize: const Size(200, 50),
+              padding: EdgeInsets.fromLTRB(45.0, 12.0, 45.0, 9.0),
+              elevation: 20.0,
+              shape: RoundedRectangleBorder(
+                side: BorderSide(
+                  color: Colors.transparent,
+                ),
+                borderRadius: BorderRadius.circular(20.0),
+              ),
+              foregroundColor: Color(0xFF181621),
+            ),
+            onPressed: () {
+              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => HomePage("Hindi")),
+              );
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(3.0),
+              child: Text(
+                "Hindi",
+                style: TextStyle(
+                  fontSize: 23.0,
+                  fontFamily: 'Amaranth',
+                  color: Color.fromARGB(255, 0, 0, 0),
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );
   }
 }
+
 class CoachmarkDesc extends StatefulWidget {
   const CoachmarkDesc({
     super.key,
     required this.text,
     this.skip = "Skip",
-    this.next  = "Next",
+    this.next = "Next",
     this.onSkip,
     this.onNext,
   });
@@ -290,7 +329,7 @@ class _CoachmarkDescState extends State<CoachmarkDesc> {
             ),
             // style:Theme.of(context).textTheme.bodyMedium,
           ),
-          const SizedBox(height:16),
+          const SizedBox(height: 16),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
@@ -302,7 +341,7 @@ class _CoachmarkDescState extends State<CoachmarkDesc> {
               //     ),
               //   ),
               // ),
-              const SizedBox(width:16),
+              const SizedBox(width: 16),
               ElevatedButton(
                 onPressed: widget.onNext,
                 child: Text(
@@ -315,11 +354,9 @@ class _CoachmarkDescState extends State<CoachmarkDesc> {
                   backgroundColor: Color(0xFFFFC857),
                 ),
               ),
-
             ],
           )
         ],
-
       ),
     );
   }

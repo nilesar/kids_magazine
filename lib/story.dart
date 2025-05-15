@@ -9,7 +9,6 @@ import 'package:kids_magazine/transliterate.dart';
 import 'package:tutorial_coach_mark/tutorial_coach_mark.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-
 bool isSwitched1 = false;
 bool isSwitched2 = false;
 bool isSwitched3 = true;
@@ -24,7 +23,6 @@ class Story extends StatefulWidget {
 }
 
 class _StoryState extends State<Story> {
-
   TutorialCoachMark? tutorialCoachMark;
   List<TargetFocus> targets = [];
 
@@ -41,11 +39,13 @@ class _StoryState extends State<Story> {
     flutterTts.stop();
     super.dispose();
   }
+
   @override
   void initState() {
     isLoggedIn = FirebaseAuth.instance.currentUser != null;
 
-    if (!isLoggedIn && !isTutorialShown) { // Check if tutorial is not shown
+    if (!isLoggedIn && !isTutorialShown) {
+      // Check if tutorial is not shown
       Future.delayed(const Duration(seconds: 1), () {
         _showTutorialCoachmark();
       });
@@ -67,49 +67,41 @@ class _StoryState extends State<Story> {
     }
   }
 
-
-  void _initTarget(){
-    targets=[
+  void _initTarget() {
+    targets = [
       TargetFocus(
           identify: "transliterate",
           keyTarget: transliterateKey,
           contents: [
             TargetContent(
                 align: ContentAlign.bottom,
-                builder: (context, controller){
+                builder: (context, controller) {
                   return CoachmarkDesc(
                     text: "Click this to see transliterated text.",
-                    onNext: (){
+                    onNext: () {
                       controller.next();
                     },
-                    onSkip: (){
+                    onSkip: () {
                       controller.skip();
                     },
                   );
-                }
-            )
-          ]
-      ),
-      TargetFocus(
-          identify: "audio",
-          keyTarget: audioKey,
-          contents: [
-            TargetContent(
-                align: ContentAlign.bottom,
-                builder: (context, controller){
-                  return CoachmarkDesc(
-                    text: "Click here for audio options",
-                    onNext: (){
-                      controller.next();
-                    },
-                    onSkip: (){
-                      controller.skip();
-                    },
-                  );
-                }
-            )
-          ]
-      ),
+                })
+          ]),
+      TargetFocus(identify: "audio", keyTarget: audioKey, contents: [
+        TargetContent(
+            align: ContentAlign.bottom,
+            builder: (context, controller) {
+              return CoachmarkDesc(
+                text: "Click here for audio options",
+                onNext: () {
+                  controller.next();
+                },
+                onSkip: () {
+                  controller.skip();
+                },
+              );
+            })
+      ]),
     ];
   }
 
@@ -161,7 +153,7 @@ class _StoryState extends State<Story> {
               ),
             ),
             body: Container(
-              color:Color(0xFFFFC857),
+              color: Color(0xFFFFC857),
               child: RawScrollbar(
                 thumbColor: Colors.white70,
                 thickness: 4,
@@ -181,7 +173,10 @@ class _StoryState extends State<Story> {
                             children: [
                               Column(
                                 children: [
-                                  SizedBox(width: MediaQuery.of(context).size.width*0.02,),
+                                  SizedBox(
+                                    width: MediaQuery.of(context).size.width *
+                                        0.02,
+                                  ),
                                   FittedBox(
                                     key: audioKey,
                                     fit: BoxFit.fitWidth,
@@ -194,62 +189,83 @@ class _StoryState extends State<Story> {
                                       ),
                                     ),
                                   ),
-                                  IconButton(icon: Icon(
-                                    Icons.volume_up,
-                                    color: Color(0xFF181621),
-                                    size: 28.0,
-                                  ), onPressed: (){
-                                    showDialog(
-                                        context: context,
-                                        builder: (BuildContext context) {
-                                          return Dialog(
-                                            shape: RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.circular(10.0),
-                                            ),
-                                            elevation: 10.0,
-                                            alignment: Alignment(0,0.3),
-                                            child: Container(
-                                              height: MediaQuery.of(context).size.height * 0.40,
-                                              width: MediaQuery.of(context).size.width*0.80,
-                                              decoration: BoxDecoration(
-                                                color:Color(0xFFFFC857),
-                                                borderRadius: BorderRadius.circular(12),
-                                                boxShadow: [
-                                                  BoxShadow(
-                                                      color: Colors.black.withOpacity(0.3),
-                                                      offset: Offset(0, -2),
-                                                      blurRadius: 15.0,
-                                                      spreadRadius: 0.0
+                                  IconButton(
+                                      icon: Icon(
+                                        Icons.volume_up,
+                                        color: Color(0xFF181621),
+                                        size: 28.0,
+                                      ),
+                                      onPressed: () {
+                                        showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return Dialog(
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          10.0),
+                                                ),
+                                                elevation: 10.0,
+                                                alignment: Alignment(0, 0.3),
+                                                child: Container(
+                                                  height: MediaQuery.of(context)
+                                                          .size
+                                                          .height *
+                                                      0.40,
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width *
+                                                      0.80,
+                                                  decoration: BoxDecoration(
+                                                    color: Color(0xFFFFC857),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            12),
+                                                    boxShadow: [
+                                                      BoxShadow(
+                                                          color: Colors.black
+                                                              .withOpacity(0.3),
+                                                          offset: Offset(0, -2),
+                                                          blurRadius: 15.0,
+                                                          spreadRadius: 0.0),
+                                                    ],
                                                   ),
-                                                ],
-                                              ),
-                                              child: Column(
-                                                children: [
-                                                  Expanded(
-                                                    flex: 1,
-                                                    child: RawScrollbar(
-                                                      thumbColor: Colors.black26,
-                                                      thickness: 4,
-                                                      child: SingleChildScrollView(
-                                                        scrollDirection: Axis.vertical,
-                                                        child: Padding(
-                                                          padding: const EdgeInsets.all(10.0),
-                                                          child: Transliterate(widget._storyID, flutterTts, o_text),
+                                                  child: Column(
+                                                    children: [
+                                                      Expanded(
+                                                        flex: 1,
+                                                        child: RawScrollbar(
+                                                          thumbColor:
+                                                              Colors.black26,
+                                                          thickness: 4,
+                                                          child:
+                                                              SingleChildScrollView(
+                                                            scrollDirection:
+                                                                Axis.vertical,
+                                                            child: Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .all(
+                                                                      10.0),
+                                                              child: Transliterate(
+                                                                  widget
+                                                                      ._storyID,
+                                                                  flutterTts,
+                                                                  o_text),
+                                                            ),
+                                                          ),
                                                         ),
                                                       ),
-                                                    ),
+                                                    ],
                                                   ),
-                                                ],
-                                              ),
-                                            ),
-                                          );
-                                        });
-                                  })
-
+                                                ),
+                                              );
+                                            });
+                                      })
                                 ],
                               ),
                               SizedBox(
-                                width: MediaQuery.of(context).size.width*0.04,
+                                width: MediaQuery.of(context).size.width * 0.04,
                               ),
                               Column(
                                 children: [
@@ -272,12 +288,12 @@ class _StoryState extends State<Story> {
                                       });
                                     },
                                     activeTrackColor: Color(0xFF181621),
-                                    activeColor:Colors.blue,
+                                    activeColor: Colors.blue,
                                   ),
                                 ],
                               ),
                               SizedBox(
-                                width: MediaQuery.of(context).size.width*0.04,
+                                width: MediaQuery.of(context).size.width * 0.04,
                               ),
                               Column(
                                 children: [
@@ -300,55 +316,48 @@ class _StoryState extends State<Story> {
                                         isSwitched2 = value;
 
                                         if (isSwitched2) {
-                                          // Declare the variable outside the try block
-                                          //
-                                          //
-                                          // // Determine the default script based on the selected language
-                                          // // print(selectedLanguage);
-
-                                          // print(o_text);
                                           switch (selectedLanguage) {
                                             case 'Telugu':
                                               tt_text =
                                                   transliterateTelugu(o_text);
                                               break;
                                             case 'Bengali':
-                                              tt_text = transliterateBengali(
-                                                  o_text);
+                                              tt_text =
+                                                  transliterateBengali(o_text);
                                               break;
                                             case 'Gujarati':
-                                              tt_text = transliterateGujarati(
-                                                  o_text);
+                                              tt_text =
+                                                  transliterateGujarati(o_text);
                                               break;
                                             case 'Marathi':
-                                              tt_text = transliterateMarathi(
-                                                  o_text);
+                                              tt_text =
+                                                  transliterateMarathi(o_text);
+                                              break;
+                                            // added hindi by nilendu *********
+                                            case 'Hindi':
+                                              tt_text =
+                                                  transliterateHindi(o_text);
                                               break;
                                           }
 
-                                          if( t_text != tt_text ) {
+                                          if (t_text != tt_text) {
                                             updateTransliteratedText(
                                                 widget._storyID, tt_text);
                                           }
-
-
                                         }
-
-
-
 
                                         // Call your transliterateTelugu function here
                                         // Update Firestore document
-
                                       });
                                     },
                                     activeTrackColor: Color(0xFF181621),
                                     activeColor: Colors.blue,
                                   ),
-
                                 ],
                               ),
-                              SizedBox(width: MediaQuery.of(context).size.width*0.02,),
+                              SizedBox(
+                                width: MediaQuery.of(context).size.width * 0.02,
+                              ),
                             ],
                           ),
                           // color: Color(0xFF181621),
@@ -356,11 +365,15 @@ class _StoryState extends State<Story> {
                         SizedBox(
                           height: 10.0,
                         ),
-                        if (isSwitched2 == false && /* isSwitched1 == false && */  isSwitched3 == true ||
-                            isSwitched2 == false && /* isSwitched1 == false && */ isSwitched3 == false)
+                        if (isSwitched2 ==
+                                    false && /* isSwitched1 == false && */
+                                isSwitched3 == true ||
+                            isSwitched2 ==
+                                    false && /* isSwitched1 == false && */
+                                isSwitched3 == false)
                           Container(
                             height: MediaQuery.of(context).size.height * 0.74,
-                            width: MediaQuery.of(context).size.width*0.95,
+                            width: MediaQuery.of(context).size.width * 0.95,
                             decoration: BoxDecoration(
                               color: Color.fromARGB(255, 238, 222, 187),
                               borderRadius: BorderRadius.circular(12),
@@ -369,10 +382,8 @@ class _StoryState extends State<Story> {
                                     color: Colors.black.withOpacity(0.3),
                                     offset: Offset(0, -2),
                                     blurRadius: 15.0,
-                                    spreadRadius: 0.0
-                                ),
+                                    spreadRadius: 0.0),
                               ],
-
                             ),
                             child: Column(
                               children: [
@@ -385,7 +396,9 @@ class _StoryState extends State<Story> {
                                       scrollDirection: Axis.vertical,
                                       child: Padding(
                                         padding: const EdgeInsets.all(10.0),
-                                        child: HighlightedText(text: o_text, flutterTts: flutterTts),
+                                        child: HighlightedText(
+                                            text: o_text,
+                                            flutterTts: flutterTts),
                                       ),
                                     ),
                                   ),
@@ -393,10 +406,11 @@ class _StoryState extends State<Story> {
                               ],
                             ),
                           ),
-                        if (isSwitched2 == true /* && isSwitched1 == false */ && isSwitched3 == false)
+                        if (isSwitched2 == true /* && isSwitched1 == false */ &&
+                            isSwitched3 == false)
                           Container(
                             height: MediaQuery.of(context).size.height * 0.74,
-                            width: MediaQuery.of(context).size.width*0.95,
+                            width: MediaQuery.of(context).size.width * 0.95,
                             decoration: BoxDecoration(
                               color: Color.fromARGB(255, 238, 222, 187),
                               borderRadius: BorderRadius.circular(12),
@@ -405,8 +419,7 @@ class _StoryState extends State<Story> {
                                     color: Colors.black.withOpacity(0.3),
                                     offset: Offset(0, -2),
                                     blurRadius: 15.0,
-                                    spreadRadius: 0.0
-                                ),
+                                    spreadRadius: 0.0),
                               ],
                             ),
                             child: Column(
@@ -435,21 +448,19 @@ class _StoryState extends State<Story> {
                               ],
                             ),
                           ),
-
                         if (isSwitched2 == true && isSwitched3 == true)
                           Container(
                             height: MediaQuery.of(context).size.height * 0.35,
-                            width: MediaQuery.of(context).size.width*0.95,
+                            width: MediaQuery.of(context).size.width * 0.95,
                             decoration: BoxDecoration(
-                              color:Color.fromARGB(255, 238, 222, 187),
+                              color: Color.fromARGB(255, 238, 222, 187),
                               borderRadius: BorderRadius.circular(12),
                               boxShadow: [
                                 BoxShadow(
                                     color: Colors.black.withOpacity(0.3),
                                     offset: Offset(0, -2),
                                     blurRadius: 15.0,
-                                    spreadRadius: 0.0
-                                ),
+                                    spreadRadius: 0.0),
                               ],
                             ),
                             child: Column(
@@ -463,7 +474,9 @@ class _StoryState extends State<Story> {
                                       scrollDirection: Axis.vertical,
                                       child: Padding(
                                         padding: const EdgeInsets.all(10.0),
-                                        child: HighlightedText(text: o_text, flutterTts: flutterTts),
+                                        child: HighlightedText(
+                                            text: o_text,
+                                            flutterTts: flutterTts),
                                       ),
                                     ),
                                   ),
@@ -478,17 +491,16 @@ class _StoryState extends State<Story> {
                         if (isSwitched2 == true)
                           Container(
                             height: MediaQuery.of(context).size.height * 0.35,
-                            width: MediaQuery.of(context).size.width*0.95,
+                            width: MediaQuery.of(context).size.width * 0.95,
                             decoration: BoxDecoration(
-                              color:Color.fromARGB(255, 238, 222, 187),
+                              color: Color.fromARGB(255, 238, 222, 187),
                               borderRadius: BorderRadius.circular(12),
                               boxShadow: [
                                 BoxShadow(
                                     color: Colors.black.withOpacity(0.3),
                                     offset: Offset(0, -2),
                                     blurRadius: 15.0,
-                                    spreadRadius: 0.0
-                                ),
+                                    spreadRadius: 0.0),
                               ],
                             ),
                             child: Column(
@@ -527,11 +539,13 @@ class _StoryState extends State<Story> {
         });
   }
 }
+
 void updateTransliteratedText(String storyID, String newText) {
   FirebaseFirestore.instance
       .collection('stories')
       .doc(storyID)
       .update({'transliterated_text': newText})
       .then((_) => print('Transliterated text updated successfully!'))
-      .catchError((error) => print('Error updating transliterated text: $error'));
+      .catchError(
+          (error) => print('Error updating transliterated text: $error'));
 }

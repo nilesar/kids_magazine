@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:kids_magazine/transliterate.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 
-
 class HighlightedText extends StatefulWidget {
   final String text;
   final FlutterTts flutterTts;
@@ -12,6 +11,7 @@ class HighlightedText extends StatefulWidget {
 
   @override
   _HighlightedTextState createState() => _HighlightedTextState();
+  
 }
 class _HighlightedTextState extends State<HighlightedText> {
   int start = 0;
@@ -111,3 +111,4 @@ class _HighlightedTextState extends State<HighlightedText> {
     );
   }
 }
+
