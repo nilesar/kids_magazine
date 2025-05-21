@@ -41,9 +41,6 @@ We welcome your contribution! Help us enrich the story collection by submitting 
 ## ⚠️ Developer Reminders (For Version 2025)
 
 > **🚨 Don't mess with Gradle unless you have a backup!**
--## please note that python scripts file contain only gtts flask code. For coqui code mail to yashika.garg.cse23@itbhu.ac.in.
-> For telugu related code mail to dsai.hemanthreddy.cse23@itbhu.ac.in.
-> Any other doubts related to app installation or app workflow or how codes are written please feel free to mail nilendu.adhikary.cd.cse23@itbhu.ac.in .
 - Always run a fresh `flutter create demo_app` if unsure about Java/Gradle issues.
 - Fix and lock:
   - `compileSdkVersion`
