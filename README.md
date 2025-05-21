@@ -1,4 +1,5 @@
-# 📚 Android Kid Magazine App (V4 - 2025)
+
+# 📚 Android Kid Magazine App (V5 - 2025)
 
 In this age of mobility, many families migrate across regions or countries for work. Children of such immigrant parents are often raised away from their native regions. While many of these children understand and speak their mother tongue fluently, most cannot read or write it. This is largely due to the lack of proper educational infrastructure in schools outside their home states.
 
@@ -8,7 +9,7 @@ Our app solves this problem by offering a fun and educational platform. It trans
 
 ## ✨ Features
 
-- 📖 Read stories in **Bengali, Gujarati, and Telugu**
+- 📖 Read stories in **Bengali, Gujarati, Telugu, Marathi and Hindi**
 - 🔤 Romanized (transliterated) script for easy learning
 - 🔊 Built-in audio narration
 - 📂 Anyone can upload `.txt` files with new stories
@@ -40,7 +41,9 @@ We welcome your contribution! Help us enrich the story collection by submitting 
 ## ⚠️ Developer Reminders (For Version 2025)
 
 > **🚨 Don't mess with Gradle unless you have a backup!**
-
+-## please note that python scripts file contain only gtts flask code. For coqui code mail to yashika.garg.cse23@itbhu.ac.in.
+> For telugu related code mail to dsai.hemanthreddy.cse23@itbhu.ac.in.
+> Any other doubts related to app installation or app workflow or how codes are written please feel free to mail nilendu.adhikary.cd.cse23@itbhu.ac.in .
 - Always run a fresh `flutter create demo_app` if unsure about Java/Gradle issues.
 - Fix and lock:
   - `compileSdkVersion`
@@ -64,6 +67,13 @@ cd android
 ./gradlew clean
 ./gradlew build
 
+## **KEY>PROPERTIES**
+storePassword=IrLaBiItBhU2021
+keyPassword=IrLaBiItBhU
+storeFile=../app/tests.jks
+keyAlias=key
+
+
 
 
 # Back to root directory
@@ -77,6 +87,11 @@ Stack Overflow
 
 Flutter GitHub Issues
 
+
+
+
+
+
 Flutter and Android Discord/Reddit developer communities
 
 
@@ -84,3 +99,6 @@ Flutter and Android Discord/Reddit developer communities
 📊 Understanding the App Workflow
 To fully understand the inner workings and structure of the app, refer to the app's official presentation (ask the team for access).
 https://drive.google.com/file/d/177q0IMoogFmPvKLWgsF6Dv5zbtDO6CNu/view?usp=sharing
+=======
+# Android_Kids_Magazine_V5
+
