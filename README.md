@@ -4,6 +4,7 @@
 In this age of mobility, many families migrate across regions or countries for work. Children of such immigrant parents are often raised away from their native regions. While many of these children understand and speak their mother tongue fluently, most cannot read or write it. This is largely due to the lack of proper educational infrastructure in schools outside their home states.
 
 Our app solves this problem by offering a fun and educational platform. It transliterates literary content from Indian languages into Roman script (used in English, which is widely taught across India), helping children learn to read their native language. The app also features **audio narration**, enabling users to **listen, read, and learn** in both native and Roman scripts.
+## 🔁 [View the App's Workflow](https://drive.google.com/file/d/1hWtNysAHUUUAa2F8NdbCFs9Na2OfDRQh/view?usp=drive_link)
 
 ---
 
